@@ -27,3 +27,40 @@ $bar;
 $bar = NULL;
 
 var_dump($bar);
+
+$array = array(1, 2, 3, 4);
+$array = [1, 2, 3, 4];
+$array = [
+        1, 
+        'hello',
+        true,
+        NULL,
+        [1, 2, 3]
+];
+$array = [
+    1,
+    2,
+    3,
+    'name' => 'Riks',
+    'age' => 18,
+    1000 => 67,
+    'Hello World!',
+    'gender' => 'sigma male',
+    'isSigma' => true,
+    4,
+    5
+
+];
+var_dump($array[6]);
+$array = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+];
+var_dump($array[2][1]);
+$array = [1, 2, 3];
+array_push($array , 4);
+array_push($array, 5, 6, 7);
+$array[] = 8;
+var_dump($array);
+$array
