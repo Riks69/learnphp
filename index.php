@@ -1,51 +1,19 @@
-<?php
+<?php include __DIR__ .'/partials/header.php'; ?>
 
-class Cat {
-    public function __construct()
-    {
-        var_dump('Class was created!');
-    }
 
-    public function __call($name, $args) {
-        var_dump($name, $args);
-    }
+    <main class="container">
+      <?php include __DIR__ .'/partials/hero.php'; ?>
+      <?php include __DIR__ .'/partials/featured.php'; ?>
 
-    public function __invoke($value)
-    {
-        var_dump($value);
-    }
+      <div class="row g-5">
+        <div class="col-md-8">
+            <?php include __DIR__ .'/partials/posts.php'; ?>
 
-    public function __get($name){
-        var_dump($name);
-        return 'Cool shit!';
-    }
+        </div>
+        <div class="col-md-4">
+          <?php include __DIR__ .'/partials/sidebar.php'; ?>
+          <?php include __DIR__ .'/partials/footer.php'; ?>
 
-    public function __set($name, $value){
-        var_dump($name, $value);
-    }
+      </div>
+    </main>
 
-    public function __toString()
-    {
-        return 'Mjäu';
-    }
-
-    public function __destruct()
-    {
-        var_dump('Class was destroyed!');
-    }
-}
-
-function makeCat(){
-    $cat = new cat();
-}
-
-makeCat();
-$kitty = new Cat();
-var_dump($kitty);
-var_dump($kitty->mood);
-$kitty->color = 'Rainbow';
-$kitty->throwShit('Many', 'Smelly', 'poop', 1, 2, 3);
-$kitty('Something');
-echo $kitty;
-$kitty = 1;
-var_dump('Something...');
