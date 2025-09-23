@@ -1,4 +1,3 @@
-
           <div class="position-sticky" style="top: 2rem">
             <div class="p-4 mb-3 bg-body-tertiary rounded">
               <h4 class="fst-italic">About</h4>
@@ -110,4 +109,3 @@
               </ol>
             </div>
           </div>
-        </div>

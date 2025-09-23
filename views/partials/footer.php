@@ -7,7 +7,7 @@
       <p class="mb-0"><a href="#">Back to top</a></p>
     </footer>
     <script
-      src="../assets/dist/js/bootstrap.bundle.min.js"
+      src="/assets/dist/js/bootstrap.bundle.min.js"
       class="astro-vvvwv3sm"
     ></script>
   </body>
