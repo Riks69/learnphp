@@ -12,11 +12,12 @@ class DB
     public function __construct()
     {
         try {
-            $this->conn = new PDO("sqlite:" . __DIR__ . "/../db.sqlite");
+            $dbPath = __DIR__ . '/../db.sqlite';
+            $this->conn = new PDO("sqlite:$dbPath");
+            // set the PDO error mode to exception
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            // do NOT echo anything — throw exception
-            throw new \Exception("Connection failed: " . $e->getMessage());
+            echo "Connection failed: " . $e->getMessage();
         }
     }
 
@@ -24,24 +25,25 @@ class DB
     {
         $stmt = $this->conn->prepare("SELECT * FROM $table");
         $stmt->execute();
+        // set the resulting array to associative
         $stmt->setFetchMode(PDO::FETCH_CLASS, $class);
         return $stmt->fetchAll();
     }
 
     public function where($table, $class, $field, $value)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM $table WHERE $field=:value");
-        $stmt->bindValue(':value', $value);
+        $stmt = $this->conn->prepare("SELECT * FROM $table WHERE $field='$value'");
         $stmt->execute();
+        // set the resulting array to associative
         $stmt->setFetchMode(PDO::FETCH_CLASS, $class);
         return $stmt->fetchAll();
     }
 
     public function find($table, $class, $id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM $table WHERE id=:id");
-        $stmt->bindValue(':id', $id);
+        $stmt = $this->conn->prepare("SELECT * FROM $table WHERE id=$id");
         $stmt->execute();
+        // set the resulting array to associative
         $stmt->setFetchMode(PDO::FETCH_CLASS, $class);
         return $stmt->fetch();
     }
@@ -50,43 +52,33 @@ class DB
     {   
         $fieldNames = array_keys($fields);
         $fieldNamesText = implode(', ', $fieldNames);
-        $placeholders = ':' . implode(', :', $fieldNames);
+        
+        $fieldValuesText = implode("', '", $fields);
 
-        $sql = "INSERT INTO $table ($fieldNamesText) VALUES ($placeholders)";
-        $stmt = $this->conn->prepare($sql);
-
-        foreach ($fields as $key => $value) {
-            $stmt->bindValue(":$key", $value);
-        }
-
-        $stmt->execute();
-        return $this->conn->lastInsertId();
+        $sql = "INSERT INTO $table ($fieldNamesText)
+                VALUES ('$fieldValuesText')";
+        // use exec() because no results are returned
+        $this->conn->exec($sql);
     }
 
-    public function update($table, $fields, $id)
-    {
+    public function update($table, $fields, $id) {
         $updateText = '';
-        foreach ($fields as $key => $value) {
-            $updateText .= "$key=:$key, ";
+        foreach($fields as $key=>$value) {
+            $updateText .= "$key='$value', ";
         }
-        $updateText = rtrim($updateText, ', ');
-
-        $sql = "UPDATE $table SET $updateText WHERE id=:id";
+        $updateText = substr($updateText, 0, -2);
+        $sql = "UPDATE $table SET $updateText WHERE id=$id";
+        // Prepare statement
         $stmt = $this->conn->prepare($sql);
 
-        foreach ($fields as $key => $value) {
-            $stmt->bindValue(":$key", $value);
-        }
-        $stmt->bindValue(':id', $id);
-
+        // execute the query
         $stmt->execute();
     }
+    
+    public function delete($table, $id) {
+        $sql = "DELETE FROM $table WHERE id=$id";
 
-    public function delete($table, $id)
-    {
-        $sql = "DELETE FROM $table WHERE id=:id";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bindValue(':id', $id);
-        $stmt->execute();
+        // use exec() because no results are returned
+        $this->conn->exec($sql);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\User;
@@ -8,70 +9,83 @@ class UsersController
     public function index()
     {
         $users = User::all();
-        include __DIR__ . '/../../views/users/index.php';
+        view('users/index', compact('users'));
     }
 
-    public function create()
+    public function view()
     {
-        include __DIR__ . '/../../views/users/create.php';
-    }
-
-    public function store()
-    {
-        // Väldi header viga – ära väljasta midagi enne seda
-        ob_start();
-
-        $user = new User();
-        $user->email = $_POST['email'];
-        $user->password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $user->save();
-
-        ob_end_clean();
-        header('Location: /users');
-        exit;
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            redirect('/users');
+            return;
+        }
+        
+        $user = User::find($id);
+        if (!$user) {
+            redirect('/users');
+            return;
+        }
+        
+        view('users/view', compact('user'));
     }
 
     public function edit()
     {
         $id = $_GET['id'] ?? null;
         if (!$id) {
-            header('Location: /users');
-            exit;
+            redirect('/users');
+            return;
         }
-
+        
         $user = User::find($id);
-        include __DIR__ . '/../../views/users/edit.php';
+        if (!$user) {
+            redirect('/users');
+            return;
+        }
+        
+        view('users/edit', compact('user'));
     }
 
     public function update()
     {
-        ob_start();
-
-        $id = $_POST['id'];
-        $user = User::find($id);
-        $user->email = $_POST['email'];
-        if (!empty($_POST['password'])) {
-            $user->password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $id = $_POST['id'] ?? null;
+        if (!$id) {
+            redirect('/users');
+            return;
         }
+        
+        $user = User::find($id);
+        if (!$user) {
+            redirect('/users');
+            return;
+        }
+        
+        $user->email = $_POST['email'];
+        
+        // Kui parool on sisestatud, siis uuenda seda
+        if (!empty($_POST['password'])) {
+            $user->password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        }
+        
         $user->save();
-
-        ob_end_clean();
-        header('Location: /users');
-        exit;
+        redirect('/users/view?id=' . $user->id);
     }
 
-    public function destroy()
+    public function delete()
     {
-        ob_start();
-
-        $id = $_POST['id'];
-        $user = User::find($id);
-        if ($user) {
-            $user->delete();
+        $id = $_POST['id'] ?? null;
+        if (!$id) {
+            redirect('/users');
+            return;
         }
-
-        ob_end_clean();
-        header('Location: /users');
-        exit;
+        
+        $user = User::find($id);
+        if (!$user) {
+            redirect('/users');
+            return;
+        }
+        
+        $user->delete();
+        redirect('/users');
     }
 }

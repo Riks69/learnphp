@@ -1,5 +1,5 @@
 {
-    "name": "riksx/learnphp",
+    "name": "Riko/learnphp",
     "autoload": {
         "psr-4": {
             "App\\": "src/"
@@ -7,7 +7,7 @@
     },
     "authors": [
         {
-            "name": "Riks69",
+            "name": "Riko",
             "email": "rikoarti.arju@gmail.com"
         }
     ],

@@ -10,7 +10,7 @@ class PublicController
             [
                 'title' => 'World news 1',
                 'published' => '16.09.2025',
-                'author' => 'Kaspar',
+                'author' => 'Relina',
                 'body' => 'Some world news body 1'
             ],
             [
@@ -40,7 +40,7 @@ class PublicController
             [
                 'title' => 'U.S news 1',
                 'published' => '16.09.2025',
-                'author' => 'Kaspar',
+                'author' => 'Relina',
                 'body' => 'Some U.S news body 1'
             ],
             [
